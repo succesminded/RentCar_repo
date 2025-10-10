@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AUTÓKÖLCSÖNZŐ</title>
+
+<style>
+	table, th, td
+	{
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	  padding: 20px;
+	}
+</style>
+
+</head>
+<body>
+
+	<h1>AUTÓKÖLCSÖNZŐ</h1>
+	
+	<p>Válaszd ki mettől-meddig szeretnél autót kölcsönözni</p>
+	
+	<form action="/cars" method="get">
+		<label>Kölcsönzés első napja</label>
+		<input type="date" value="${resDto.getStartDate()}" name="startDate" required/>
+		<br></br>
+		<label>Kölcsönzés utolsó napja</label>
+		<input type="date" value="${resDto.getEndDate()}" name="endDate" required/>
+		<br></br>		
+		<input type="submit" value="Szabad autók keresése">
+	</form>
+	
+	<div th:if="${resDto != null}">
+		<p>Kölcsönözhető autók a megadott időszakban</p>
+		<br></br>
+		<table>
+			<tr>
+				<th>Autó azonosítója</th>
+				<th>Autó Típusa</th>
+				<th>Autó Rendszáma</th>
+				<th>Autó Színe</th>
+				<th>Autó napi bérleti díja (HUF)</th>
+				<th>Bérlés indítása az autóra</th>
+			<tr/>
+			<tr th:each="car : ${resDto.getCarDtoList()}">
+				<td th:text="${car.getId()}">
+				<td th:text="${car.getType()}"></td>
+				<td th:text="${car.getPlateNumber()}"></td>
+				<td th:text="${car.getColor()}"></td>
+				<td th:text="${car.getFee()}"></td>
+				<td>
+					<form action="/cars/startres" method="post">
+						<input type="hidden" th:value="${car.getId()}" name="carId"/>
+						<input type="hidden" th:value="${resDto.getStartDate()}" name="startDate"/>
+						<input type="hidden" th:value="${resDto.getEndDate()}" name="endDate"/>
+						<input type="submit" value="Kibérlem">
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+
+</body>
+</html>

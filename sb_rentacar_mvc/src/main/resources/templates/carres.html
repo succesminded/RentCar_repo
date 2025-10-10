@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BÉRLÉS ADATAI</title>
+</head>
+<body>
+
+	<form action="/car/finalizeres" method="post">
+		
+		<input type="hidden" th:each="car : ${resDto.getCarDtoList()}" th:value="${car.getId()}" name="carId"/>
+		<input type="hidden" th:value="${resDto.getStartDate()}" name="startDate"/>
+		<input type="hidden" th:value="${resDto.getEndDate()}" name="endDate"/>
+		
+		<p>Kérjük add meg a kölcsönzéshez szükséges adataid:</p>
+		<br></br>
+		<label>Név</label>
+		<input type="text" th:value="Név" name="userName" required/>
+		<br></br>
+		<label>Cím</label>
+		<input type="text" th:value="Cím" name="userAddress" required/>
+		<br></br>
+		<label>E-mail cím</label>
+		<input type="email" name="userEmail" required/>
+		<br></br>
+		<label>Telefonszám</label>
+		<input type="text" name="userPhone" required/>
+		<br></br>	
+		<input type="submit" value="Bérlés mentése">
+	</form>
+
+</body>
+</html>
