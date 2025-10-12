@@ -27,7 +27,7 @@
 		<br></br>
 		<label>Kölcsönzés utolsó napja</label>
 		<input th:if="${resDto != null}" type="date" id="enddatepicker" th:value="${resDto.getEndDate()}" name="endDate" required/>
-		<input th:if="${resDto == null}" type="date" onclick='copy()' id="enddatepicker" value="" name="endDate" select=":last" required/>
+		<input th:if="${resDto == null}" type="date" id="enddatepicker" value="" name="endDate" select=":last" required/>
 		<br></br>		
 		<input type="submit" value="Szabad autók keresése">
 	</form>
@@ -39,8 +39,7 @@
 		   const day = String(today.getDate()).padStart(2, '0');
 		   const formattedDate = `${year}-${month}-${day}`;
 		   document.getElementById('startdatepicker').setAttribute('min', formattedDate);
-		   const formattedEndDate = document.getElementById('startdatepicker').value;
-		   document.getElementById('enddatepicker').setAttribute('min', formattedEndDate);
+		   document.getElementById('enddatepicker').setAttribute('min', formattedDate);
 		</script>
 		
 	<br></br>	

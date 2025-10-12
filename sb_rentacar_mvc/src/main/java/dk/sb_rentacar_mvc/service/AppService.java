@@ -76,7 +76,16 @@ public class AppService {
 		/** bérlés kezdő és végdátuma közötti napok számának kiszámítása */
 		long daysBetween = getDaysBetween(startDate, endDate);
 		
-		resDto = new ResDto(carDtoList, startDate, endDate, daysBetween, 0);
+		if(daysBetween >= 1)
+		{
+			resDto = new ResDto(carDtoList, startDate, endDate, daysBetween);
+		}
+		else
+		{
+			carDtoList = new ArrayList<>();
+			resDto = new ResDto(carDtoList, startDate, endDate, daysBetween);
+		}
+		
 		
 		return resDto;
 	}
@@ -105,7 +114,7 @@ public class AppService {
 		/** bérlés kezdő és végdátuma közötti napok számának kiszámítása */
 		long daysBetween = getDaysBetween(startDate, endDate);
 		
-		resDto = new ResDto(carDtoList, startDate, endDate, daysBetween, 0);
+		resDto = new ResDto(carDtoList, startDate, endDate, daysBetween);
 		
 		return resDto;
 	}
