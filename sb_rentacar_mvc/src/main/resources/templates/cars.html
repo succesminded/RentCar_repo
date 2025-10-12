@@ -22,24 +22,40 @@
 	
 	<form action="/cars" method="get">
 		<label>Kölcsönzés első napja</label>
-		<input type="date" value="${resDto.getStartDate()}" name="startDate" required/>
+		<input th:if="${resDto != null}" type="date" id="startdatepicker" th:value="${resDto.getStartDate()}" name="startDate" required/>
+		<input th:if="${resDto == null}" type="date" id="startdatepicker" value="" name="startDate" select=":first" required/>
 		<br></br>
 		<label>Kölcsönzés utolsó napja</label>
-		<input type="date" value="${resDto.getEndDate()}" name="endDate" required/>
+		<input th:if="${resDto != null}" type="date" id="enddatepicker" th:value="${resDto.getEndDate()}" name="endDate" required/>
+		<input th:if="${resDto == null}" type="date" onclick='copy()' id="enddatepicker" value="" name="endDate" select=":last" required/>
 		<br></br>		
 		<input type="submit" value="Szabad autók keresése">
 	</form>
 	
+		<script>
+		   const today = new Date();
+		   const year = today.getFullYear();
+		   const month = String(today.getMonth() + 1).padStart(2, '0');
+		   const day = String(today.getDate()).padStart(2, '0');
+		   const formattedDate = `${year}-${month}-${day}`;
+		   document.getElementById('startdatepicker').setAttribute('min', formattedDate);
+		   const formattedEndDate = document.getElementById('startdatepicker').value;
+		   document.getElementById('enddatepicker').setAttribute('min', formattedEndDate);
+		</script>
+		
+	<br></br>	
+	
 	<div th:if="${resDto != null}">
-		<p>Kölcsönözhető autók a megadott időszakban</p>
-		<br></br>
+		
+		<h3>Kölcsönözhető autók a megadott időszakban</h3>
+
 		<table>
 			<tr>
 				<th>Autó azonosítója</th>
 				<th>Autó Típusa</th>
 				<th>Autó Rendszáma</th>
 				<th>Autó Színe</th>
-				<th>Autó napi bérleti díja (HUF)</th>
+				<th>Autó bérleti díja (HUF) 1 napra</th>
 				<th>Bérlés indítása az autóra</th>
 			<tr/>
 			<tr th:each="car : ${resDto.getCarDtoList()}">

@@ -5,8 +5,12 @@
 <title>BÉRLÉS VÉGE</title>
 </head>
 <body>
-
-	<p th:text="${errorDto.getCode()}"/>
-
+	<div th:if="${errorDto != null}">
+		<p th:if="${errorDto.getCode() == 0}">A bérlés mentése nem sikerült.</p>
+		<p th:if="${errorDto.getCode() == 1}">A bérlés mentése sikerült.</p>
+	</div>
+	
+	<a href="http://localhost:8080/">Vissza a szabad autók oldalára</a>
+	
 </body>
 </html>

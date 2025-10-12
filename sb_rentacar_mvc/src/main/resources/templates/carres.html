@@ -12,20 +12,24 @@
 		<input type="hidden" th:value="${resDto.getStartDate()}" name="startDate"/>
 		<input type="hidden" th:value="${resDto.getEndDate()}" name="endDate"/>
 		
-		<p>Kérjük add meg a kölcsönzéshez szükséges adataid:</p>
+		<h3>Kérjük add meg a kölcsönzéshez szükséges adataid:</h3>
+		<label>Név:</label>
+		<input type="text" name="userName" placeholder="Gipsz Jakab" required/>
 		<br></br>
-		<label>Név</label>
-		<input type="text" th:value="Név" name="userName" required/>
+		<label>Cím:</label>
+		<input type="text" name="userAddress" placeholder="1111 Budapest Mező utca 23." required/>
 		<br></br>
-		<label>Cím</label>
-		<input type="text" th:value="Cím" name="userAddress" required/>
+		<label>E-mail cím:</label>
+		<input type="email" name="userEmail" placeholder="valami@gmail.com" required/>
 		<br></br>
-		<label>E-mail cím</label>
-		<input type="email" name="userEmail" required/>
+		<label>Telefonszám:</label>
+		<input type="text" name="userPhone" placeholder="067023456789" required/>
 		<br></br>
-		<label>Telefonszám</label>
-		<input type="text" name="userPhone" required/>
-		<br></br>	
+		
+		<p name="daysBetween" th:text="'Foglalandó napok száma: ' + ${resDto.getDaysBetween()}"/>
+		
+		<p name="daysBetween" th:each="car : ${resDto.getCarDtoList()}" th:text="'Autó bérleti díja (HUF) 1 napra: ' + ${car.getFee()}"/>
+		
 		<input type="submit" value="Bérlés mentése">
 	</form>
 

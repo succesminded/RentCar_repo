@@ -3,12 +3,15 @@ package dk.sb_rentacar_mvc.controller;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dk.sb_rentacar_mvc.dto.AdminDto;
+import dk.sb_rentacar_mvc.dto.CarDto;
 import dk.sb_rentacar_mvc.dto.ErrorDto;
 import dk.sb_rentacar_mvc.dto.ResDto;
 import dk.sb_rentacar_mvc.service.AppService;
@@ -17,11 +20,13 @@ import dk.sb_rentacar_mvc.service.AppService;
 public class AppController {
 
 	private AppService service;
+	private Environment env;
 
 	@Autowired
-	public AppController(AppService service) {
+	public AppController(AppService service, Environment env) {
 		super();
 		this.service = service;
+		this.env = env;
 	}
 	
 	@GetMapping("/")
@@ -79,8 +84,98 @@ public class AppController {
 															userEmail,
 															userPhone);
 		model.addAttribute("errorDto", errorDto);
+			
 		
 		return "end.html";
 	}
 	
+	@GetMapping("/admin")
+	public String loadAdminPage(
+				Model model,
+				@RequestParam("apiKey") String apiKey)
+	{
+		AdminDto adminDto = null;
+		
+		if(validApiKey(apiKey))
+		{
+			adminDto = this.service.getAdminDto();
+			model.addAttribute("adminDto", adminDto);
+		}
+		else
+		{
+			model.addAttribute("adminDto", adminDto);
+		}
+		
+		return "admin.html";
+	}
+
+	private boolean validApiKey(String apiKey) {
+		
+		boolean result = false;
+		
+		if(apiKey.equals(env.getProperty("apiKey1")) ||  apiKey.equals(env.getProperty("apiKey2")))
+		{
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	@GetMapping("/admin/car/edit/start")
+	public String getCarDataForModification(
+				Model model,
+				@RequestParam("apiKey") String apiKey,
+				@RequestParam("carId") Integer carId)
+	{
+		CarDto carDto = null;
+		
+		if(validApiKey(apiKey))
+		{
+			carDto = this.service.getCarDataForModification(carId);
+			model.addAttribute("carDto", carDto);
+		}
+		else
+		{
+			model.addAttribute("carDto", carDto);
+		}
+		
+		
+		return "admin_editcar.html";
+	}
+	
+	@PostMapping("/admin/car/edit/finish")
+	public String saveCarDataModification(
+				Model model,
+				@RequestParam("apiKey") String apiKey,
+				@RequestParam("newCar") int newCar,
+				@RequestParam("carId") Integer carId,
+				@RequestParam("type") String type,
+				@RequestParam("plateNumber") String plateNumber,
+				@RequestParam("color") String color,
+				@RequestParam("active") boolean active,
+				@RequestParam("fee") int fee)
+	{
+		AdminDto adminDto = null;
+		
+		if(validApiKey(apiKey))
+		{
+			if(newCar == 0)
+			{
+				adminDto = this.service.saveCarDataModification(carId, type, plateNumber, color, active, fee);
+				model.addAttribute("adminDto", adminDto);
+			}
+			else
+			{
+				adminDto = this.service.saveCarDataModification(null, type, plateNumber, color, active, fee);
+				model.addAttribute("adminDto", adminDto);
+			}
+		}
+		else
+		{
+			model.addAttribute("adminDto", adminDto);
+		}
+		
+		
+		return "admin.html";
+	}
 }

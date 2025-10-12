@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div th:if="${carDto != null}">
+		<form action="/admin/car/edit/finish" method="post">
+			
+			<input type="hidden" th:value="${carDto.getId()}" name="carId"/>
+			
+			<label>Új autó?</label>
+			<select name="newCar">
+				<option type="number" th:text="IGEN" th:value="1"></option>
+				<option type="number" th:text="NEM" th:value="0" selected></option>
+			</select>
+			<br></br>
+			
+			<label>apiKey: </label>
+			<input type="text" name="apiKey" required/>
+			<br></br>
+			<label>Típus</label>
+			<input type="text" th:value="${carDto.getType()}" name="type" required/>
+			<br></br>
+			<label>Rendszám:</label>
+			<input type="text"  th:value="${carDto.getPlateNumber()}" name="plateNumber" required/>
+			<br></br>
+			<label>Szín:</label>
+			<input type="text"  th:value="${carDto.getColor()}" name="color" required/>
+			<br></br>
+			<label>Bérelhető?:</label>
+			<input type="text" th:value="${carDto.isActive()}" name="active" required/>
+			<br></br>
+			<label>Bérleti díj 1 napra:</label>
+			<input type="number" th:value="${carDto.getFee()}" name="fee" required/>
+			<br></br>
+			<input type="submit" value="Módosítás mentése"/>
+			
+		</form>
+	</div>
+
+</body>
+</html>
