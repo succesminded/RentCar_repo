@@ -41,48 +41,47 @@ public class AppService {
 		List<Car> carList = new ArrayList<>();
 		List<Integer> resCarList = new ArrayList<>();
 		
-		/** AKTÍV AUTÓK LEKÉRDEZÉSE CARREPO-ból */
-		carList = this.carRepository.getActiveCars();
-		
-		/** FOGLALÁSOK LEKÉRDEZÉSE RESREPO-ból */
-		resCarList = this.resRepository.getCarIdReseverdInUserDateRange(startDate, endDate);
-		
-		/** resCarList-ben lévő carId-k törlése carList-ből */
-		List<Car> removeCarList = new ArrayList<>();
-		
-		for(Car car : carList)
-		{
-			if(resCarList.contains(car.getId()))
-			{
-				removeCarList.add(car);
-			}
-		}
-		
-		carList.removeAll(removeCarList);
-		
-		/** carDtoList feltöltése a maradék carList elemekkel */
-		for(Car car : carList)
-		{
-			CarDto carDto = new CarDto(
-										car.getId(),
-										car.getType(),
-										car.getPlateNumber(),
-										car.getColor(),
-										car.isActive(),
-										car.getFee());
-			carDtoList.add(carDto);
-		}
-		
 		/** bérlés kezdő és végdátuma közötti napok számának kiszámítása */
 		long daysBetween = getDaysBetween(startDate, endDate);
 		
 		if(daysBetween >= 1)
 		{
+			/** AKTÍV AUTÓK LEKÉRDEZÉSE CARREPO-ból */
+			carList = this.carRepository.getActiveCars();
+			
+			/** FOGLALÁSOK LEKÉRDEZÉSE RESREPO-ból */
+			resCarList = this.resRepository.getCarIdReseverdInUserDateRange(startDate, endDate);
+			
+			/** resCarList-ben lévő carId-k törlése carList-ből */
+			List<Car> removeCarList = new ArrayList<>();
+			
+			for(Car car : carList)
+			{
+				if(resCarList.contains(car.getId()))
+				{
+					removeCarList.add(car);
+				}
+			}
+			
+			carList.removeAll(removeCarList);
+			
+			/** carDtoList feltöltése a maradék carList elemekkel */
+			for(Car car : carList)
+			{
+				CarDto carDto = new CarDto(
+											car.getId(),
+											car.getType(),
+											car.getPlateNumber(),
+											car.getColor(),
+											car.isActive(),
+											car.getFee());
+				carDtoList.add(carDto);
+			}
+			
 			resDto = new ResDto(carDtoList, startDate, endDate, daysBetween);
 		}
 		else
 		{
-			carDtoList = new ArrayList<>();
 			resDto = new ResDto(carDtoList, startDate, endDate, daysBetween);
 		}
 		
@@ -245,37 +244,77 @@ public class AppService {
 											int fee) {
 		
 		AdminDto adminDto = null;
+		Car car = null;
+		Car carRepoData = null;
 		
 		/** ha az adott autó active státuszát akarja deaktiválni, akkor carId alapján ellenőrizni kell, 
 		 * hogy az autó szerepel-e aktuális dátum szerint folyamatban lévő foglalásban. 
 		 * Amennyiben igen, nem szabad végrehajtani a módosítást */
 		
-		Optional<Car> carOpt = this.carRepository.findById(carId);
-		
-		Car carRepoData = null;
-		if(carOpt.isEmpty() == false)
+		if(carId == null)
 		{
-			carRepoData = carOpt.get();
+			car = new Car(
+							carId,
+							type,
+							plateNumber,
+							color,
+							active,
+							fee);
 		}
-
-		/** ha deaktiválni akarja és a carRepo-ban nincs deaktiválva*/
-		if(active == false && active != carRepoData.isActive())
+		else
 		{
-			List<Integer> underReservationPeriod = this.resRepository.isCarInReservationPeriod(carId);
-			/** ha nincs olyan foglalás a resRepo-ban, aminek időszakába a mai nap dátuma beleesik, akkor mentés*/
-			if(underReservationPeriod.size() == 0)
+			Optional<Car> carOpt = this.carRepository.findById(carId);
+			
+			if(carOpt.isEmpty() == false)
 			{
-				Car car = new Car(
+				carRepoData = carOpt.get();
+			}
+	
+			/** ha deaktiválni akarja és a carRepo-ban nincs deaktiválva*/
+			if(active == false && active != carRepoData.isActive())
+			{
+				List<Integer> underReservationPeriod = this.resRepository.isCarInReservationPeriod(carId);
+				/** ha nincs olyan foglalás a resRepo-ban, aminek időszakába a mai nap dátuma beleesik, akkor mentés*/
+				
+				if(underReservationPeriod.size() == 0)
+				{
+					car = new Car(
 									carId,
 									type,
 									plateNumber,
 									color,
 									active,
 									fee);
+				}
+				/** ha van olyan foglalás a resRepo-ban, aminek időszakába a mai nap dátuma beleesik, akkor mentés, DE active mező nem módosul*/
+				else
+				{
+					car = new Car(
+									carId,
+									type,
+									plateNumber,
+									color,
+									carRepoData.isActive(),
+									fee);
+				}
 				
-				this.carRepository.save(car);
+			}
+			/** ha nem akarja deaktiválni*/
+			else
+			{
+				car = new Car(
+								carId,
+								type,
+								plateNumber,
+								color,
+								active,
+								fee);
 			}
 		}
+		
+		/** MENTÉS */
+		this.carRepository.save(car);
+		
 		adminDto = getAdminDto();
 		
 		return adminDto;
