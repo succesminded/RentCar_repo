@@ -3,13 +3,13 @@ package dk.sb_rentacar_mvc.controller;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dk.sb_rentacar_mvc.apikey.ApiKeyValidator;
 import dk.sb_rentacar_mvc.dto.AdminDto;
 import dk.sb_rentacar_mvc.dto.CarDto;
 import dk.sb_rentacar_mvc.dto.ErrorDto;
@@ -20,13 +20,13 @@ import dk.sb_rentacar_mvc.service.AppService;
 public class AppController {
 
 	private AppService service;
-	private Environment env;
+	private ApiKeyValidator apiKeyValidator;
 
 	@Autowired
-	public AppController(AppService service, Environment env) {
+	public AppController(AppService service, ApiKeyValidator apiKeyValidator) {
 		super();
 		this.service = service;
-		this.env = env;
+		this.apiKeyValidator = apiKeyValidator;
 	}
 	
 	@GetMapping("/")
@@ -96,7 +96,7 @@ public class AppController {
 	{
 		AdminDto adminDto = null;
 		
-		if(validApiKey(apiKey))
+		if(apiKeyValidator.validApiKey(apiKey))
 		{
 			adminDto = this.service.getAdminDto();
 			model.addAttribute("adminDto", adminDto);
@@ -108,18 +108,6 @@ public class AppController {
 		
 		return "admin.html";
 	}
-
-	private boolean validApiKey(String apiKey) {
-		
-		boolean result = false;
-		
-		if(apiKey.equals(env.getProperty("apiKey1")) ||  apiKey.equals(env.getProperty("apiKey2")))
-		{
-			result = true;
-		}
-		
-		return result;
-	}
 	
 	@GetMapping("/admin/car/edit/start")
 	public String getCarDataForModification(
@@ -129,7 +117,7 @@ public class AppController {
 	{
 		CarDto carDto = null;
 		
-		if(validApiKey(apiKey))
+		if(apiKeyValidator.validApiKey(apiKey))
 		{
 			carDto = this.service.getCarDataForModification(carId);
 			model.addAttribute("carDto", carDto);
@@ -157,7 +145,7 @@ public class AppController {
 	{
 		AdminDto adminDto = null;
 		
-		if(validApiKey(apiKey))
+		if(apiKeyValidator.validApiKey(apiKey))
 		{
 			if(newCar == 0)
 			{
