@@ -16,6 +16,6 @@ public interface ReservationRepository extends CrudRepository<Reservation, Integ
 	@Query("SELECT car_id FROM reservations WHERE (start_date <= :endDate) AND (end_date >= :startDate)")
 	List<Integer> getCarIdReseverdInUserDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-	@Query("SELECT car_id FROM rentacardb.reservations WHERE (start_date <= CURDATE()) AND (end_date >= CURDATE()) AND car_id = :carId")
+	@Query("SELECT car_id FROM reservations WHERE (start_date <= CURDATE()) AND (end_date >= CURDATE()) AND car_id = :carId")
 	List<Integer> isCarInReservationPeriod(@Param("carId") Integer carId);
 }

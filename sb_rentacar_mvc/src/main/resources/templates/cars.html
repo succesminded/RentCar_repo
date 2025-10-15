@@ -23,11 +23,11 @@
 	<form action="/cars" method="get">
 		<label>Kölcsönzés első napja</label>
 		<input th:if="${resDto != null}" type="date" id="startdatepicker" th:value="${resDto.getStartDate()}" name="startDate" required/>
-		<input th:if="${resDto == null}" type="date" id="startdatepicker" value="" name="startDate" select=":first" required/>
+		<input th:if="${resDto == null}" type="date" id="startdatepicker" value="" name="startDate" required/>
 		<br></br>
 		<label>Kölcsönzés utolsó napja</label>
 		<input th:if="${resDto != null}" type="date" id="enddatepicker" th:value="${resDto.getEndDate()}" name="endDate" required/>
-		<input th:if="${resDto == null}" type="date" id="enddatepicker" value="" name="endDate" select=":last" required/>
+		<input th:if="${resDto == null}" type="date" id="enddatepicker" value="" name="endDate" required/>
 		<br></br>		
 		<input type="submit" value="Szabad autók keresése">
 	</form>

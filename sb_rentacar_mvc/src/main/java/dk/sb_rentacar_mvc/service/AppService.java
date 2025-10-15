@@ -137,16 +137,37 @@ public class AppService {
 									String userEmail,
 									String userPhone) {
 		
-		ErrorDto errorDto = new ErrorDto(1);
+		ErrorDto errorDto = new ErrorDto(0);
 		
-		try
+		/** lekérjük a megadott intervallumban a foglalt autók listáját */
+		List<Integer> resCarList = this.resRepository.getCarIdReseverdInUserDateRange(startDate, endDate);
+		/** lekérjük a carREpo-ból, hogy az adott autó bérelhető-e (létezik-e)*/
+		Integer carActive = this.carRepository.getActiveByCarId(carId);
+		
+		if(carActive != null)
 		{
-			Reservation res = new Reservation(null, userName, userAddress, userEmail, userPhone, startDate, endDate, carId);
-			this.resRepository.save(res);
-		}
-		catch(Exception e)
-		{
-			errorDto.setCode(0);
+			/** ellenőrizzük, hogy a kapott carId benne van-e a foglalt autók listájában vagy nem foglalható */
+			boolean carNotAvailable = resCarList.contains(carId) || carActive == 0;
+						
+			//ha nincs benne a listában, akkor mentés - code=1
+			if(carNotAvailable == false)
+			{	try
+				{
+					Reservation res = new Reservation(null, userName, userAddress, userEmail, userPhone, startDate, endDate, carId);
+					this.resRepository.save(res);
+					errorDto.setCode(1);
+				}
+				catch(Exception e)
+				{
+					//resRepo mentési hiba esetén - code=0
+					errorDto.setCode(0);
+				}
+			}
+			//ha benne van a listában, akkor nincs mentés - code=0
+			else
+			{
+				errorDto.setCode(0);
+			}
 		}
 		
 		return errorDto;
