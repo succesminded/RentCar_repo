@@ -1,5 +1,7 @@
 package dk.sb_rentacar_mvc.dto;
 
+import java.util.Base64;
+
 public class CarDto {
 	
 	private Integer id;
@@ -8,9 +10,10 @@ public class CarDto {
 	private String color;
 	private boolean active;
 	private int fee;
+	private byte[] image;
 	
 	
-	public CarDto(Integer id, String type, String plateNumber, String color, boolean active, int fee) {
+	public CarDto(Integer id, String type, String plateNumber, String color, boolean active, int fee, byte[] image) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -18,6 +21,7 @@ public class CarDto {
 		this.color = color;
 		this.active = active;
 		this.fee = fee;
+		this.image = image;
 	}
 
 	public Integer getId() {
@@ -68,5 +72,20 @@ public class CarDto {
 		this.active = active;
 	}
 
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public String getImageBase64() {
+	
+	String base64String = Base64.getEncoder().encodeToString(this.image);
+	
+	return base64String;
+		
+	}
 
 }

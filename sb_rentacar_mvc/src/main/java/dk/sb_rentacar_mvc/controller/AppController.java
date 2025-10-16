@@ -1,6 +1,8 @@
 package dk.sb_rentacar_mvc.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import dk.sb_rentacar_mvc.apikey.ApiKeyValidator;
 import dk.sb_rentacar_mvc.dto.AdminDto;
@@ -141,20 +144,24 @@ public class AppController {
 				@RequestParam("plateNumber") String plateNumber,
 				@RequestParam("color") String color,
 				@RequestParam("active") boolean active,
-				@RequestParam("fee") int fee)
+				@RequestParam("fee") int fee,
+				@RequestParam("image") MultipartFile image
+				) throws IOException
 	{
 		AdminDto adminDto = null;
+		
+		byte[] imageToUpload = image.getBytes();
 		
 		if(apiKeyValidator.validApiKey(apiKey))
 		{
 			if(newCar == 0)
 			{
-				adminDto = this.service.saveCarDataModification(carId, type, plateNumber, color, active, fee);
+				adminDto = this.service.saveCarDataModification(carId, type, plateNumber, color, active, fee, imageToUpload);
 				model.addAttribute("adminDto", adminDto);
 			}
 			else
 			{
-				adminDto = this.service.saveCarDataModification(null, type, plateNumber, color, active, fee);
+				adminDto = this.service.saveCarDataModification(null, type, plateNumber, color, active, fee, imageToUpload);
 				model.addAttribute("adminDto", adminDto);
 			}
 		}

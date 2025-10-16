@@ -74,7 +74,9 @@ public class AppService {
 											car.getPlateNumber(),
 											car.getColor(),
 											car.isActive(),
-											car.getFee());
+											car.getFee(),
+											car.getImage()
+											);
 				carDtoList.add(carDto);
 			}
 			
@@ -106,7 +108,9 @@ public class AppService {
 										car.getPlateNumber(),
 										car.getColor(),
 										car.isActive(),
-										car.getFee());
+										car.getFee(),
+										car.getImage()
+										);
 			carDtoList.add(carDto);
 		}
 		
@@ -192,7 +196,9 @@ public class AppService {
 										car.getPlateNumber(),
 										car.getColor(),
 										car.isActive(),
-										car.getFee());
+										car.getFee(),
+										car.getImage()
+										);
 			carDtoList.add(carDto);
 		}
 		
@@ -214,7 +220,9 @@ public class AppService {
 									car.getPlateNumber(),
 									car.getColor(),
 									car.isActive(),
-									car.getFee());
+									car.getFee(),
+									car.getImage()
+									);
 			}
 			
 			ReservationDto resDto = new ReservationDto(
@@ -250,7 +258,9 @@ public class AppService {
 								car.getPlateNumber(),
 								car.getColor(),
 								car.isActive(),
-								car.getFee());
+								car.getFee(),
+								car.getImage()
+								);
 		}
 		
 		return carDto;
@@ -262,7 +272,8 @@ public class AppService {
 											String plateNumber, 
 											String color,
 											boolean active, 
-											int fee) {
+											int fee,
+											byte[] image) {
 		
 		AdminDto adminDto = null;
 		Car car = null;
@@ -280,7 +291,9 @@ public class AppService {
 							plateNumber,
 							color,
 							active,
-							fee);
+							fee,
+							image
+							);
 		}
 		else
 		{
@@ -305,7 +318,8 @@ public class AppService {
 									plateNumber,
 									color,
 									active,
-									fee);
+									fee,
+									image);
 				}
 				/** ha van olyan foglalás a resRepo-ban, aminek időszakába a mai nap dátuma beleesik, akkor mentés, DE active mező nem módosul*/
 				else
@@ -316,7 +330,9 @@ public class AppService {
 									plateNumber,
 									color,
 									carRepoData.isActive(),
-									fee);
+									fee,
+									image
+									);
 				}
 				
 			}
@@ -329,7 +345,9 @@ public class AppService {
 								plateNumber,
 								color,
 								active,
-								fee);
+								fee,
+								image
+								);
 			}
 		}
 		

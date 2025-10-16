@@ -31,6 +31,7 @@
 				<th>Szín</th>
 				<th>Bérelhető?</th>
 				<th>Bérleti díj (HUF) 1 napra</th>
+				<th>Kép</th>
 				<th>Módosítás indítása</th>
 			<tr/>
 			<tr th:each="car : ${adminDto.getCarDtoList()}">
@@ -40,6 +41,7 @@
 				<td th:text="${car.getColor()}"></td>
 				<td th:text="${car.isActive()}"></td>
 				<td th:text="${car.getFee()}"></td>
+				<td><img th:if="${car.getImage() != null}" th:src="'data:image/jpeg;base64,' + ${car.getImageBase64()}" width="150"></td>
 				<td>
 					<form action="/admin/car/edit/start" method="get">
 						<input type="hidden" th:value="${car.getId()}" name="carId"/>

@@ -7,7 +7,7 @@
 <body>
 
 	<div th:if="${carDto != null}">
-		<form action="/admin/car/edit/finish" method="post">
+		<form action="/admin/car/edit/finish" enctype="multipart/form-data" method="post">
 			
 			<input type="hidden" th:value="${carDto.getId()}" name="carId"/>
 			
@@ -35,6 +35,10 @@
 			<br></br>
 			<label>Bérleti díj 1 napra:</label>
 			<input type="number" th:value="${carDto.getFee()}" name="fee" required/>
+			<br></br>
+			<label>Kép:</label>
+			<img th:if="${carDto.getImage() != null}" th:src="'data:image/jpeg;base64,' + ${carDto.getImageBase64()}" width="150"><br></br>
+			<input type="file" name="image"/>
 			<br></br>
 			<input type="submit" value="Módosítás mentése"/>
 			

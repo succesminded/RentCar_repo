@@ -1,5 +1,7 @@
 package dk.sb_rentacar_mvc.model;
 
+import java.util.Base64;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -25,8 +27,11 @@ public class Car {
 	
 	@Column("fee")
 	private int fee;
+	
+	@Column("image")
+	private byte[] image;
 
-	public Car(Integer id, String type, String plateNumber, String color, boolean active, int fee) {
+	public Car(Integer id, String type, String plateNumber, String color, boolean active, int fee, byte[] image) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -34,6 +39,7 @@ public class Car {
 		this.color = color;
 		this.active = active;
 		this.fee = fee;
+		this.image = image;
 	}
 
 	public Integer getId() {
@@ -83,6 +89,21 @@ public class Car {
 	public void setFee(int fee) {
 		this.fee = fee;
 	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
 	
 	
+	public String getImageBase64() {
+	
+	String base64String = Base64.getEncoder().encodeToString(image);
+	
+	return base64String;
+	
+	}
 }
